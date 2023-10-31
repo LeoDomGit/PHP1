@@ -14,8 +14,8 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"
         integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script src="
-                    https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.all.min.js
-                    "></script>
+                        https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.all.min.js
+                        "></script>
 </head>
 
 <body>
@@ -34,20 +34,25 @@
                                     <input type="text" class="form-control" placeholder="Username" id="username"
                                         required>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group mt-3">
+                                    <label class="label" for="name">Email</label>
+                                    <input type="text" class="form-control" placeholder="Email" id="email"
+                                        required>
+                                </div>
+                                <!-- <div class="form-group">
                                     <label class="label" for="password">Password</label>
                                     <input type="password" class="form-control" id="password" placeholder="Password"
                                         required>
                                     <span toggle="#password-field"
                                         class="fa fa-fw fa-eye field-icon toggle-password"></span>
-                                </div>
-                                <div class="form-group">
+                                </div> -->
+                                <!-- <div class="form-group">
                                     <label class="label" for="password">Password</label>
                                     <input type="password" id="password2" class="form-control" placeholder="Password"
                                         required>
                                     <span toggle="#password-field"
                                         class="fa fa-fw fa-eye field-icon toggle-password"></span>
-                                </div>
+                                </div> -->
                             </div>
                             <div class="half p-4 py-md-5 bg-primary">
                                 <div class="form-group">
@@ -98,29 +103,20 @@
             $("#registerBtn").click(function(e) {
                 e.preventDefault();
                 var username = $("#username").val().trim();
-                var password = $("#password").val().trim();
-                var password2 = $("#password2").val().trim();
+                // var password = $("#password").val().trim();
+                var email = $("#email").val().trim();
+                // var password2 = $("#password2").val().trim();
                 if (username == '') {
 
                     Toast.fire({
                         icon: 'error',
                         title: 'Thiếu username'
                     })
-                } else if (password == '') {
+                } else if (email == '') {
 
                     Toast.fire({
                         icon: 'error',
-                        title: 'Thiếu mật khẩu'
-                    })
-                } else if (password2 == '') {
-                    Toast.fire({
-                        icon: 'error',
-                        title: 'Thiếu mật khẩu 2'
-                    })
-                } else if (password != password2) {
-                    Toast.fire({
-                        icon: 'error',
-                        title: 'Vui lòng nhập 2 mật khẩu giống nhau'
+                        title: 'Thiếu email'
                     })
                 } else {
                     $.ajax({
@@ -128,7 +124,8 @@
                         url: "controllers.php?action=create",
                         data: {
                             username: username,
-                            password: password
+                            // password: password,
+                            email:email
                         },
                         dataType: "JSON",
                         success: function(res) {
@@ -136,7 +133,7 @@
                                 Toast.fire({
                                     icon: 'success',
                                     title: 'Đăng ký  thành công'
-                                }).then(()=>{
+                                }).then(() => {
                                     window.location.replace('?page=login')
                                 })
                             } else if (res.check == false) {

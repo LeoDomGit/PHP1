@@ -2,31 +2,33 @@
     require_once('pdo.php');
     session_start();
     date_default_timezone_set('Asia/Ho_Chi_Minh');
+    require_once('mail.php');
     if(isset($_GET['action'])){
         switch ($_GET['action']) {
             case 'create':
-                if(!isset($_POST['username'])||!isset($_POST['password'])||$_POST['username']==''||$_POST['password']==''){
+                if(!isset($_POST['username'])||$_POST['username']==''||!isset($_POST['email'])||$_POST['email']==''){
                     $data = ['check'=>false,'msg'=>'Thiếu thông tin tài khoản'];
 
                     header("Content-Type: application/json");
                     echo json_encode($data);
                     exit();
                 }else{
-                    $password=$_POST['password'];
+                    $password=random_int(1000,9999);
                     $password2=password_hash($password,PASSWORD_BCRYPT,[10]);
                     $sql = "SELECT * FROM users where name = ' ".$_POST['username']." ' ";
+                    $email= $_POST['email'];
                     $result= pdo_query($sql);
                     if(count($result)==0){
                         $date= date("Y-m-d H:i:s");
-                        $sql = "INSERT INTO users (name,password,created_at) values('".$_POST['username']."','".$password2."','".$date."')";
+                        $sql = "INSERT INTO users (name,password,email,created_at) values('".$_POST['username']."','".$password2."','".$email."','".$date."')";
                         pdo_execute($sql);
+                        $name = $_POST['username'];
+                        goimail($email,$name,$password);
                         $data = ['check'=>true];
-    
                         header("Content-Type: application/json");
                         echo json_encode($data);
                         exit();
                     }
-
                 }
                 break;
             case 'checkLogin':
