@@ -5,6 +5,40 @@
     require_once('mail.php');
     if(isset($_GET['action'])){
         switch ($_GET['action']) {
+            case 'loadChat':
+                if( isset($_SESSION['id'])){
+                    $sql ='SELECT * FROM chat WHERE idUser='.$_SESSION['id'];
+                    $data = pdo_query($sql);
+                    header("Content-Type: application/json");
+                    echo json_encode($data);
+                    exit();
+                }
+                
+                break;
+            case 'submitChat':
+                if(isset($_POST['mess'])&&$_POST['mess']!='' && isset($_SESSION['id'])){
+                    $mess = $_POST['mess'];
+                    $sql = "SELECT answer FROM response where question like '%".$mess."%'";
+                    $result = pdo_query_value($sql);
+                    if($result){
+                        $date= date("Y-m-d H:i:s");
+                        $sql = "INSERT INTO chat (idUser,question,answer,created_at) values(".$_SESSION['id'].",'".$mess."','".$result."','".$date."')";
+                        pdo_execute($sql);
+                    }else{
+                        $response='Tôi không biết bạn đang hỏi gì !';
+                        $date= date("Y-m-d H:i:s");
+                        $sql = "INSERT INTO chat (idUser,question,answer,created_at) values(".$_SESSION['id'].",'".$mess."','".$response."','".$date."')";
+                        pdo_execute($sql);
+                    }
+                    $sql ='SELECT * FROM chat WHERE idUser='.$_SESSION['id'];
+                    $data = pdo_query($sql);
+                    header("Content-Type: application/json");
+                    echo json_encode($data);
+                    exit();
+                }else{
+                    echo "None";
+                }
+                break;
             case 'editResponse':
                 if(!isset($_POST['id'])||$_POST['id']==''||!isset($_POST['question'])||$_POST['question']==''||!isset($_POST['answer'])||$_POST['answer']==''){
                     $data = ['check'=>false,'msg'=>'Thiếu thông tin'];
@@ -124,6 +158,7 @@
                         $checkpass = password_verify($_POST['password'],$password);
                         if($checkpass==true){
                             $_SESSION['user']= $_POST['username'];
+                            $_SESSION['id']=$result['id'];
                             $data = ['check'=>true];
                             header("Content-Type: application/json");
                             echo json_encode($data);

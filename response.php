@@ -1,8 +1,4 @@
 <?php
-session_start();
-if (!isset($_SESSION['user']) || $_SESSION['user'] == '') {
-    header('location:index.php?page=login');
-}
 require_once 'pdo.php';
 require_once 'header.php';
 $sql = 'SELECT * FROM response';

@@ -1,7 +1,12 @@
+<?php
+if (!isset($_SESSION['user']) || $_SESSION['user'] == '') {
+    header('location:index.php?page=login');
+}
+?>
 <!doctype html>
 <html lang="en">
   <head>
-  	<title>Sidebar 04</title>
+  	<title>Dashboard</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -31,19 +36,11 @@ https://cdn.jsdelivr.net/npm/sweetalert2@11.9.0/dist/sweetalert2.all.min.js
             <a href="?page=response"><span class="fa fa-home mr-3"></span>Phản hồi</a>
           </li>
           <li>
-              <a href="#"><span class="fa fa-user mr-3"></span> Dashboard</a>
+              <a href="?page=home"><span class="fa fa-user mr-3"></span> Chat Bot</a>
           </li>
+
           <li>
-            <a href="#"><span class="fa fa-sticky-note mr-3"></span> Friends</a>
-          </li>
-          <li>
-            <a href="#"><span class="fa fa-sticky-note mr-3"></span> Subcription</a>
-          </li>
-          <li>
-            <a href="#"><span class="fa fa-paper-plane mr-3"></span> Settings</a>
-          </li>
-          <li>
-            <a href="#"><span class="fa fa-paper-plane mr-3"></span> Information</a>
+            <a href="?page=logout"><span class="fa fa-paper-plane mr-3"></span> Đăng xuất</a>
           </li>
         </ul>
 
