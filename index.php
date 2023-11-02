@@ -15,6 +15,9 @@
         case 'register':
             require_once('register.php');
             break;
+        case 'response':
+            require_once('response.php');
+            break;
         default:
             require_once('notfound.php');
             break;

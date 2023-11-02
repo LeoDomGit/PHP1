@@ -5,6 +5,75 @@
     require_once('mail.php');
     if(isset($_GET['action'])){
         switch ($_GET['action']) {
+            case 'editResponse':
+                if(!isset($_POST['id'])||$_POST['id']==''||!isset($_POST['question'])||$_POST['question']==''||!isset($_POST['answer'])||$_POST['answer']==''){
+                    $data = ['check'=>false,'msg'=>'Thiếu thông tin'];
+                    header("Content-Type: application/json");
+                    echo json_encode($data);
+                    exit();
+                    
+                }else{
+                    $date= date("Y-m-d H:i:s");
+                    $sql="UPDATE response set question = '".$_POST['question']."',
+                    answer='".$_POST['answer']."',updated_at='".$date."' where id=".$_POST['id'];
+                    pdo_execute($sql);
+                    $data = ['check'=>true];
+                    header("Content-Type: application/json");
+                    echo json_encode($data);
+                    exit();
+                }
+                break;
+            case 'deleteResponse':
+                if(!isset($_POST['id'])||$_POST['id']==''){
+                    $data = ['check'=>false,'msg'=>'Thiếu thông tin'];
+                    header("Content-Type: application/json");
+                    echo json_encode($data);
+                    exit();
+                }else{
+                    $sql ="SELECT * FROM response where id=".$_POST['id'];
+                    $result = pdo_query($sql);
+                    if(count($result)==0){
+                        $data = ['check'=>false,'msg'=>'Không tồn tại id result'];
+                        header("Content-Type: application/json");
+                        echo json_encode($data);
+                        exit();
+                    }else{
+                        $sql = "DELETE FROM response where id=".$_POST['id'];
+                        pdo_execute($sql);
+                        $data = ['check'=>true];
+                        header("Content-Type: application/json");
+                        echo json_encode($data);
+                        exit();
+                    }
+                }
+                break;
+            case 'createResponse':
+                if(!isset($_POST['question'])||$_POST['question']==''||!isset($_POST['answer'])||$_POST['answer']==''){
+                    $data = ['check'=>false,'msg'=>'Thiếu thông tin'];
+                    header("Content-Type: application/json");
+                    echo json_encode($data);
+                    exit();
+                    
+                }else{
+                    $sql = "SELECT * FROM response where question='".$_POST['question']."'";
+                    $result= pdo_query($sql);
+                    if(count($result)==0){
+                        $date= date("Y-m-d H:i:s");
+                        $sql = "INSERT INTO response (question,answer,created_at)
+                        VALUES ('".$_POST['question']."','".$_POST['answer']."','".$date."')";
+                        pdo_execute($sql);
+                        $data = ['check'=>true];
+                        header("Content-Type: application/json");
+                        echo json_encode($data);
+                        exit();
+                    }else{
+                        $data = ['check'=>false,'msg'=>'Trùng câu hỏi'];
+                        header("Content-Type: application/json");
+                        echo json_encode($data);
+                        exit();
+                    }
+                }
+                break;
             case 'create':
                 if(!isset($_POST['username'])||$_POST['username']==''||!isset($_POST['email'])||$_POST['email']==''){
                     $data = ['check'=>false,'msg'=>'Thiếu thông tin tài khoản'];
