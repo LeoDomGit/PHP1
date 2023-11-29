@@ -19,15 +19,16 @@
                 if(isset($_POST['mess'])&&$_POST['mess']!='' && isset($_SESSION['id'])){
                     $mess = $_POST['mess'];
                     $sql = "SELECT answer FROM response where question like '%".$mess."%'";
-                    $result = pdo_query_value($sql);
-                    if($result){
-                        $date= date("Y-m-d H:i:s");
-                        $sql = "INSERT INTO chat (idUser,question,answer,created_at) values(".$_SESSION['id'].",'".$mess."','".$result."','".$date."')";
-                        pdo_execute($sql);
-                    }else{
+                    $result1= pdo_query($sql);
+                    if(count($result1)==0){
                         $response='Tôi không biết bạn đang hỏi gì !';
                         $date= date("Y-m-d H:i:s");
                         $sql = "INSERT INTO chat (idUser,question,answer,created_at) values(".$_SESSION['id'].",'".$mess."','".$response."','".$date."')";
+                        pdo_execute($sql);
+                    }else{
+                        $result = pdo_query_value($sql);
+                        $date= date("Y-m-d H:i:s");
+                        $sql = "INSERT INTO chat (idUser,question,answer,created_at) values(".$_SESSION['id'].",'".$mess."','".$result."','".$date."')";
                         pdo_execute($sql);
                     }
                     $sql ='SELECT * FROM chat WHERE idUser='.$_SESSION['id'];

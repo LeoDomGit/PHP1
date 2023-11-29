@@ -8,7 +8,10 @@
     }
     switch ($page) {
         case 'home':
-            require_once('home.php');
+            if(isset($_SESSION['user'])){
+                echo $_SESSION['user'];
+            }
+            // require_once('home.php');
             break;
         case 'logout':
             if(isset($_SESSION['user'])){
